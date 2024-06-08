@@ -1,12 +1,16 @@
 package stepDefn;
 
+import org.testng.Assert;
+
 import driver.Driver;
 import driver.DriverManager;
+import enums.ProjectConfig;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import pages.HomePage;
 import reports.ExtentReport;
+import utils.PropertyUtils;
 
 public class Steps {
 
@@ -22,12 +26,19 @@ public class Steps {
 
 	@And("Fetch the URL")
 	public void fetch_the_url() {
-		DriverManager.getDriver().get("https://www.cleartheshelters.com/");
+		DriverManager.getDriver().get(PropertyUtils.getValueFromConfigMap(ProjectConfig.URL));
 	}
 
+	@Then("Verify the Home Page title in site")
+	public void verify_the_home_page_title_in_site() {
+		String title = new HomePage().getPageTitle();
+		Assert.assertTrue(title.equalsIgnoreCase("Clear the Shelters – Clear the Shelters"));
+	}
+	
 	@Then("Verify the Page loading in site")
 	public void verify_the_page_loading_in_site() {
-		new HomePage().verifyPageLoading();
+		boolean result = new HomePage().verifyPageLoading();
+		Assert.assertTrue(result);
 	}
 
 	@Then("Close the browser")
